@@ -11,7 +11,7 @@ import (
     "crypto/rand"
     "time"
     "encoding/json"
-    // "strings"
+    "strings"
     cb "github.com/hyperledger/fabric-protos-go/common"
     "github.com/hyperledger/fabric/common/channelconfig"
     "github.com/hyperledger/fabric/common/flogging"
@@ -147,56 +147,50 @@ func (r *receiver) Ordered(msg *cb.Envelope) (messageBatches [][]*cb.Envelope, p
                                             n.SetString("30728744964821944482906991141350135883036977729841200921163471038417086370597331113352010483802494021478453749511314339371037515930484467686542587934927631376348719402746324882955532738005800671704156348311228031066874124256909005581643686595333923555272861530013748292776101178003615899225025001180586212875128736798913164255883887370520580671232782738547428258490741802098578634790950490328101305911680963472116368871804898986387165271849124946116262623804588376080380463804665212619882236903226911291895278243928695715739353705339556203802340690142292093161445357766207365243242008258238091693488590245544044788803",10)
                                             lambda.SetString("15364372482410972241453495570675067941518488864920600460581735519208543185298665556676005241901247010739226874755657169685518757965242233843271293967463815688174359701373162441477766369002900335852078174155614015533437062128454502790821843297666961777636430765006874146388050589001807949612512500590293106437389058000722937264582966244399722358813102082325645926289194123044486889374686159091217426202619582844236308949432779272628173379376152569844067970169923602558999795108906648819874361476069391365044378938423019301899196930706181861105692897130562057320331033630466207006582824646019474353900260734829107307964",10)
                                             mu.SetString("13256689890341387695013929131131765654283999493225857599058548853923222925438609447537396204587441477946298850366282115233762302190134686302488316151532609729698299282353491182653414420059437681837256170581426343070151322441473389717381960865097160349179315339913469141186286033210897195621761033308960576750016804447796083447578743290865653399347771811166205874014066902099419524266484336769485324728980724879834258719168220528184493826567184894000679291822741747364698453997973516297778974799747207359538014640936543334396047551461656727225723215628510130983193394355895077928074692909962851883150494273332640093320",10)
-                                            // q := big.NewInt(18)
-                                            // p3 := big.NewInt(2602)
-                                            // p2 := big.NewInt(250081)
-                                            // p1 := big.NewInt(1263066)
+                                            q := big.NewInt(18)
+                                            p3 := big.NewInt(2602)
+                                            p2 := big.NewInt(250081)
+                                            p1 := big.NewInt(1263066)
  
-                                            // voteStrings := strings.Split(responses, "|")
+                                            voteStrings := strings.Split(responses, "|")
  
-                                            // product := big.NewInt(1) // Start with 1 for multiplication
-                                            // for _, hexVote := range voteStrings {
-                                            //     voteBigInt := new(big.Int)
-                                            //     voteBigInt.SetString(hexVote, 16) // Convert hex to big.Int
+                                            product := big.NewInt(1) // Start with 1 for multiplication
+                                            for _, hexVote := range voteStrings {
+                                                voteBigInt := new(big.Int)
+                                                voteBigInt.SetString(hexVote, 16) // Convert hex to big.Int
  
-                                            //     // Multiply all votes together
-                                            //     product.Mul(product, voteBigInt)
-                                            // }
+                                                // Multiply all votes together
+                                                product.Mul(product, voteBigInt)
+                                            }
  
-                                            // decryptedVote := DecryptPaillier(product, lambda, mu, n)
+                                            decryptedVote := DecryptPaillier(product, lambda, mu, n)
                                             
-                                            // k1 := new(big.Int).Div(decryptedVote, p1)   // k1 = total / p3
-                                            // decryptedVote.Mod(decryptedVote, p1)                // total = total % p3
+                                            k1 := new(big.Int).Div(decryptedVote, p1)   // k1 = total / p3
+                                            decryptedVote.Mod(decryptedVote, p1)                // total = total % p3
  
-                                            // k2 := new(big.Int).Div(decryptedVote, p2)   // k2 = total / p2
-                                            // decryptedVote.Mod(decryptedVote, p2)                // total = total % p2
+                                            k2 := new(big.Int).Div(decryptedVote, p2)   // k2 = total / p2
+                                            decryptedVote.Mod(decryptedVote, p2)                // total = total % p2
  
-                                            // k3 := new(big.Int).Div(decryptedVote, p3)   // k3 = total / p1
-                                            // decryptedVote.Mod(decryptedVote, p3)                // total = total % p1
+                                            k3 := new(big.Int).Div(decryptedVote, p3)   // k3 = total / p1
+                                            decryptedVote.Mod(decryptedVote, p3)                // total = total % p1
  
-                                            // Non := new(big.Int).Div(decryptedVote, q)   // Non = total / q
-                                            // decryptedVote.Mod(decryptedVote, q)        
+                                            Non := new(big.Int).Div(decryptedVote, q)   // Non = total / q
+                                            decryptedVote.Mod(decryptedVote, q)        
  
-                                            // logger.Infof("k1:: %d, k2: %d, k3: %d, Non: %d", k1, k2, k3, Non)
+                                            logger.Infof("k1:: %d, k2: %d, k3: %d, Non: %d", k1, k2, k3, Non)
  
-                                            // if k1.Cmp(big.NewInt(1)) == 1 { // k1 > 1
-                                            //     logger.Infof("Selected")
-                                            // } else if k2.Cmp(big.NewInt(1)) == 1 { // k2 > 1
-                                            //     logger.Infof("Selected")
-                                            // } else if k3.Cmp(big.NewInt(2)) == 1 { // k3 > 2
-                                            //     logger.Infof("Selected")
-                                            // } else {
-                                            //     logger.Infof("Rejected")
-                                            //     return [][]*cb.Envelope{}, false
-                                            // }
- 
-                                            // For Analysis, without encryption
-                                            if time.Now().UnixNano()%2 == 0 { // 50% chance of 'yes' or 'no'
+                                            if k1.Cmp(big.NewInt(1)) == 1 { // k1 > 1
+                                                logger.Infof("Selected")
+                                            } else if k2.Cmp(big.NewInt(1)) == 1 { // k2 > 1
+                                                logger.Infof("Selected")
+                                            } else if k3.Cmp(big.NewInt(2)) == 1 { // k3 > 2
                                                 logger.Infof("Selected")
                                             } else {
                                                 logger.Infof("Rejected")
-                                                // return [][]*cb.Envelope{}, false
+                                                return [][]*cb.Envelope{}, false
                                             }
+ 
+                                            
                                         }
                                     }
                                 }

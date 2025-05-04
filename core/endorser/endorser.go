@@ -490,15 +490,7 @@ func (e *Endorser) ProcessProposal(ctx context.Context, signedProp *pb.SignedPro
         }
         endorserLogger.Infof("Response: %d", randomResponse)
  
-        // // for testing, tried printing to file but failed
-        // // Log raw vote data before encryption
-        // logVote(txID, mspID, randomResponse)
- 
-        // For Analysis, without encryption
-        ciphertext := new(big.Int)
-        ciphertext.SetString("8443398b38d09394ec936382f3677cf5ceb07764ace3c22a6940be296b2c95a30327b64692f9c4fae1738efd3c2c5898dc9d1f36017d095f250b50c30d7b51c6593c78a19bc82b4626ff3c8f8e0081505bdd29b5992737e82cd91d5f312d64e32146bfac8b2b0ece0b86c7cdd8532ef774d3e203224a8540bb1608f33787823ccc547595941e749fed902b8c3ff873c17de1e179233a56208cc876ed7f629e2572576e9eb6d93db35890d10b3c6e8507949226e12bc2ade7e131ac0a32288222c8efac9abc5562cc75dcf006370486eb5e8c54f8e6a167643bd21f7b35f77995415c1e28c43fc141a1ddf8c617318156b4db033f4861ffd062ef6dc548a4bdcadf312716177f69868686deb6d04e10c05cf395182d1e87324615c8ae0f2007d977e94aa6d6ae6619dadf66d27554a21847b75f556e2491ccb18a5d2112274be6f74afe82af5b3274bb10ff21b3c8795e5152dd66993d4affaa14643acb2cc14f38b3cef85db34b1b52f6823d51503f37c93f763342438dd45bf184ecf085fe6d821bce3b2d2f04f6e774383d56dd69ceb2f5db103f6ccdc475828496878856a2486bd4151a50111fb3fa2ef176c3d1f83a637ee79717f9293eeb1c02755034c3c42479c3ded262637aeb08bcc9358cdcca88d9f8e656ca432942e2e5daf2481a71b99527fa1055f7b87063119d3bac2399a27231528b7dcb6efe708977513840", 16)
- 
-        // ciphertext := EncryptPaillier(randomResponse, n, g)
+        ciphertext := EncryptPaillier(randomResponse, n, g)
         encryptedVote := ciphertext.Text(16)
  
         pResp.Response.Message = encryptedVote
